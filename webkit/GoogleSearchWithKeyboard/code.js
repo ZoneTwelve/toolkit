@@ -57,7 +57,6 @@ function focus(opt){
         top: pos[1] - halfHeight + 50, 
         behavior: "smooth" 
       } )
-      document.body.style.animation = ({scrollTop:1200},'50');
 			console.log( result[pre] );
       //window.scrollTo(0, pos[1] - halfHeight + 50);
     }
