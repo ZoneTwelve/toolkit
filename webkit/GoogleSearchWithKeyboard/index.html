@@ -28,11 +28,13 @@ var xhttp = new XMLHttpRequest();
 // ==UserScript==
 // @name     GoogleSearch With Keyboard
 // @version  1
-// @grant    none
+// @include     https://www.google.com/search*
+// @include     http://www.google.com/search*
+// @include     https://scholar.google.com/scholar*
+// @include     http://scholar.google.com/scholar*
 // ==/UserScript==
 
-// @match        https://www.google.com/search?*
-// @include      /www.google.com/search?*
+
 
 const halfHeight = window.innerHeight/2;
 
@@ -40,13 +42,27 @@ var pre = 0;//document.createElement("a");
 var preSize = 20;
 var result = [];
 document.body.style.scrollBehavior = "smooth";
+window.onload = function(){
+	focus(0);
+}
 window.onkeypress = function(event){
-  
-  if(!isNaN(parseInt(event.key,  10))){
+  window.blur();
+  if(document.activeElement==document.querySelector('input[type="text"]')){
+     /* do nothing */
+  }else if(!isNaN(parseInt(event.key,  10))){
   	focus( (parseInt( event.key, 10 ) + 9 ) % 10 )
-  }else if(event.key=="Enter" && document.activeElement!=document.querySelector('input[type="text"]')){
+  }else if(event.key=="Enter"){
     console.log("open");
-   	window.open(result[pre].parentElement.href);
+    console.log( location.origin );
+
+    switch(true){
+      case (/scholar\.google\.com/).test(location.origin):
+      	window.open( result[pre].children[1].href );
+      break;
+      case (/search\.google\.com/).test(location.origin):
+		   	window.open(result[pre].parentElement.href);
+      break;
+    }
   }else if(event.key.toLowerCase()=="n"){
     if(pre<result.length)
 		  focus(pre+1);
@@ -66,8 +82,7 @@ window.onkeypress = function(event){
 function focus(opt){
     let ch = opt;
     result = document.querySelectorAll("h3:not(.r), div.related-question-pair");
-  console.log(result);
-    
+
     if( result[ch] ){
       //result[ch].scrollIntoView();
       let el = result[opt];
