@@ -33,6 +33,7 @@ window.onkeypress = function(event){
       	window.open( result[pre].children[1].href );
       break;
       case (/search\.google\.com/).test(location.origin):
+      case (/www\.google\.com/).test(location.origin):
 		   	window.open(result[pre].parentElement.href);
       break;
     }
